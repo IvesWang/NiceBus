@@ -1,5 +1,7 @@
 package com.ives.lib_nicebus.annotation;
 
+import com.ives.lib_nicebus.ThreadMode;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,6 +15,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface NiceEvent {
-
-    String[] value();
+    ThreadMode threadMode();// = ThreadMode.POST;
+    String[] events();
 }
