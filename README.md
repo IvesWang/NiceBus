@@ -40,7 +40,8 @@ private void listenHere(String event,int age) {
 .....
 }
 ```
-这样会订阅"event1""event2"这两个事件
+这样会订阅"event1""event2"这两个事件</br>
+<b>方法的第一个参数必须提供，且是String类型。</b>
 
 
 ###### 4. 发送事件
@@ -58,4 +59,11 @@ NiceBus.getDefault().post("event1", 3);
 ```
 NiceBus.getDefault().unregister(this)
 ```
+
+License
+-------
+    Copyright (C) 2021 wangziguang && iveswang
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    You can know a detail description at http://www.apache.org/licenses/LICENSE-2.0
 
