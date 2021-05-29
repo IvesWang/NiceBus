@@ -166,6 +166,8 @@ public class NiceBus {
                 ThreadMode threadMode = eventAnnotation.threadMode();
                 // todo 根据不同的线程来执行
                 // todo 增加有参必须传参注解，只接受参数事件
+                // todo 跨进程
+                // todo 依赖注入，减少手动编写生命周期依赖代码
                 try {
                     Class[] parameterTypes = method.getParameterTypes();
                     method.setAccessible(true);
