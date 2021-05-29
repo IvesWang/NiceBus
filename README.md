@@ -28,7 +28,7 @@ dependencies {
 比如想在当前类里添加接收事件的方法
 NiceBus.getDefault().register(this)
 ```
-记得在对应的activity或fragment声明周期结束时调用unregister()方法解除注册</br>
+记得在对应的activity或fragment生命周期结束时调用unregister()方法解除注册</br>
 
 
 ###### 3. 订阅需要接收事件的方法
@@ -37,6 +37,7 @@ NiceBus.getDefault().register(this)
 ```
 @NiceEvent(threadMode = ThreadMode.ASYNC, events = {"event1", "event2"})
 private void listenHere(String event,int age) {
+// 方法的第一个参数必须提供，且是String类型
 .....
 }
 ```
@@ -52,7 +53,7 @@ NiceBus.getDefault().post("event1");
 NiceBus.getDefault().post("event1", 3);
 这样订阅者方法的参数列表里有对应参数申明则会收到3，没有该参数的收到的事件和不带参数一样。
 
-但如果如例一不带参数，则带参数的订阅者方法会收到一个默认值。（后期版本会添加必须有参才接收的设置）
+但如写法1不带参数，则带参数的订阅者方法会收到一个默认值。（后期版本会添加必须有参才接收的设置）
 ```
 
 
@@ -66,6 +67,5 @@ License
 -------
     Copyright (C) 2021 wangziguang && iveswang
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    You can know a detail description at http://www.apache.org/licenses/LICENSE-2.0
+    Licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0);
 
