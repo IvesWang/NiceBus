@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
 
     @NiceEvent(threadMode = ThreadMode.ASYNC, events = [EventConstant.EVENT_1])
-    fun subscribeFunction1(event : String){
+    fun subscribeFunction1(event : String?){
         Log.i(TAG, "subscribeFunction1 收到事件:$event")
         runOnUiThread {
             Toast.makeText(baseContext, "subscribeFunction1 收到事件:$event", Toast.LENGTH_SHORT).show()
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @NiceEvent(threadMode = ThreadMode.ASYNC, events = [EventConstant.EVENT_1, EventConstant.EVENT_2])
-    fun subscribeFunction2(event : String){
+    fun subscribeFunction2(event : String?){
         Log.i(TAG, "subscribeFunction2 收到事件:$event")
         runOnUiThread {
             Toast.makeText(baseContext, "subscribeFunction2 收到事件:$event", Toast.LENGTH_SHORT).show()

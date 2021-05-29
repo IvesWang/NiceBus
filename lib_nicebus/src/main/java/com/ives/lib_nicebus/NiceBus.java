@@ -6,6 +6,9 @@ import androidx.collection.ArrayMap;
 
 import com.ives.lib_nicebus.annotation.NiceEvent;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,10 +17,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import kotlin.jvm.internal.Intrinsics;
+
 /**
  * @author wangziguang
  * @date 2021/5/28
  * @description
+ * todo 编译期需要处理的事：1 kotlin的非空参数排查 2 代码注入，无需手动创建销毁订阅者
  */
 public class NiceBus {
 
@@ -113,7 +119,9 @@ public class NiceBus {
         } else if (types.length > 5){
             throw new IllegalArgumentException("As a limit, function " + method.toString() + " should not more than 5 parameters while you declare only one event with @NiceEvent.");
         }
-        //todo 检查参数可空等
+
+        //todo kotlin的业务参数必须可空
+        // kotlin实现可空用到了编译期注解，需要在编译期处理
     }
 
     /**
