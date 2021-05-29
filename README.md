@@ -40,16 +40,18 @@ private void listenHere(String event,int age) {
 .....
 }
 ```
-这样会订阅"event1""event2"这两个事件</br>
+这样会订阅"event1""event2"这两个事件。</br>
 <b>方法的第一个参数必须提供，且是String类型。</b>
 
 
 ###### 4. 发送事件
 ```
-NiceBus.getDefault().post("event1");</br>
+NiceBus.getDefault().post("event1");
+
 也可以发送带参数的事件：
 NiceBus.getDefault().post("event1", 3);
-这样订阅者方法的参数列表里有对应参数申明则会收到3，没有该参数的收到的事件和不带参数一样。</br>
+这样订阅者方法的参数列表里有对应参数申明则会收到3，没有该参数的收到的事件和不带参数一样。
+
 但如果如例一不带参数，则带参数的订阅者方法会收到一个默认值。（后期版本会添加必须有参才接收的设置）
 ```
 
