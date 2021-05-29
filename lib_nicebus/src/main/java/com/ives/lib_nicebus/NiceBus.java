@@ -78,7 +78,7 @@ public class NiceBus {
                         }
                         // cache method
                         if (!subscribeMethods.contains(newMethod)) {
-                            //todo 检查方法格式 参数长度、可空等
+                            checkAnnotationGrammar(eventAnnotation, newMethod);
                             subscribeMethods.add(newMethod);
                         }
                     }
@@ -96,6 +96,24 @@ public class NiceBus {
             }
         }
 
+    }
+
+    private void checkAnnotationGrammar(NiceEvent annotation, Method method){
+        Class[] types = method.getParameterTypes();
+        // 多于1个事件，第一个参数必须是String类型
+        if (annotation.events().length > 1){
+            if(types.length == 0 || (!types[0].getCanonicalName().equals("java.lang.String"))){
+                throw new IllegalArgumentException("The type of first parameter in function " + method.toString() + " should be java.lang.String while you declare more than one event with @NiceEvent." +
+                        "The String parameter will receive the event name.");
+            }
+            // 参数长度：单个事件最多5个参数，多个事件包括第一个String参数最多6个
+            if (types.length > 6){
+                throw new IllegalArgumentException("Function " + method.toString() + " should not more than 6 parameters as a limit with NiceBus.");
+            }
+        } else if (types.length > 5){
+            throw new IllegalArgumentException("As a limit, function " + method.toString() + " should not more than 5 parameters while you declare only one event with @NiceEvent.");
+        }
+        //todo 检查参数可空等
     }
 
     /**
@@ -146,6 +164,13 @@ public class NiceBus {
         }
     }
 
+    /**
+     * 1. 声明超过一个事件，第一个参数必须提供且为String类型
+     * 2. 只声明一个事件，对第一个参数没要求，不会传事件名称到方法
+     * 3. 除了表示事件的第一个参数外，最多只接收5个业务参数
+     * @param event
+     * @param postParams
+     */
     public void post(String event, Object... postParams){
         ArrayList<Method> subscriber = subscriberMethodContainer.get(event);
         if (subscriber == null){
@@ -172,20 +197,43 @@ public class NiceBus {
                     Class[] parameterTypes = method.getParameterTypes();
                     method.setAccessible(true);
                     switch (parameterTypes.length){
+                        case 0:
+                            method.invoke(weakRef.get());
+                            break;
                         case 1:
-                            method.invoke(weakRef.get(), event);
+                            if (eventAnnotation.events().length == 1){
+                                method.invoke(weakRef.get(), getParameterOrDefault(parameterTypes[0], postParams, 0));
+                            } else {
+                                method.invoke(weakRef.get(), event);
+                            }
                             break;
                         case 2:
-                            method.invoke(weakRef.get(), event, getParameterOrDefault(parameterTypes[1], postParams, 0));
+                            if (eventAnnotation.events().length == 1){// 单个事件，只传业务参数
+                                method.invoke(weakRef.get(), getParameterOrDefault(parameterTypes[0], postParams, 0), getParameterOrDefault(parameterTypes[1], postParams, 1));
+                            } else {// 多个事件，传入事件名、参数
+                                method.invoke(weakRef.get(), event, getParameterOrDefault(parameterTypes[1], postParams, 0));
+                            }
                             break;
                         case 3:
-                            method.invoke(weakRef.get(), event, getParameterOrDefault(parameterTypes[1], postParams, 0), getParameterOrDefault(parameterTypes[2], postParams, 1));
+                            if (eventAnnotation.events().length == 1){
+                                method.invoke(weakRef.get(), getParameterOrDefault(parameterTypes[0], postParams, 0), getParameterOrDefault(parameterTypes[1], postParams, 1), getParameterOrDefault(parameterTypes[2], postParams, 2));
+                            } else {
+                                method.invoke(weakRef.get(), event, getParameterOrDefault(parameterTypes[1], postParams, 0), getParameterOrDefault(parameterTypes[2], postParams, 1));
+                            }
                             break;
                         case 4:
-                            method.invoke(weakRef.get(), event, getParameterOrDefault(parameterTypes[1], postParams, 0), getParameterOrDefault(parameterTypes[2], postParams, 1), getParameterOrDefault(parameterTypes[3], postParams, 2));
+                            if (eventAnnotation.events().length == 1){
+                                method.invoke(weakRef.get(), getParameterOrDefault(parameterTypes[0], postParams, 0), getParameterOrDefault(parameterTypes[1], postParams, 1), getParameterOrDefault(parameterTypes[2], postParams, 2), getParameterOrDefault(parameterTypes[3], postParams, 3));
+                            } else {
+                                method.invoke(weakRef.get(), event, getParameterOrDefault(parameterTypes[1], postParams, 0), getParameterOrDefault(parameterTypes[2], postParams, 1), getParameterOrDefault(parameterTypes[3], postParams, 2));
+                            }
                             break;
                         case 5:
-                            method.invoke(weakRef.get(), event, getParameterOrDefault(parameterTypes[1], postParams, 0), getParameterOrDefault(parameterTypes[2], postParams, 1), getParameterOrDefault(parameterTypes[3], postParams, 2), getParameterOrDefault(parameterTypes[4], postParams, 3));
+                            if (eventAnnotation.events().length == 1){
+                                method.invoke(weakRef.get(), getParameterOrDefault(parameterTypes[0], postParams, 0), getParameterOrDefault(parameterTypes[1], postParams, 1), getParameterOrDefault(parameterTypes[2], postParams, 2), getParameterOrDefault(parameterTypes[3], postParams, 3), getParameterOrDefault(parameterTypes[4], postParams, 4));
+                            } else {
+                                method.invoke(weakRef.get(), event, getParameterOrDefault(parameterTypes[1], postParams, 0), getParameterOrDefault(parameterTypes[2], postParams, 1), getParameterOrDefault(parameterTypes[3], postParams, 2), getParameterOrDefault(parameterTypes[4], postParams, 3));
+                            }
                             break;
                         case 6:
                             method.invoke(weakRef.get(), event, getParameterOrDefault(parameterTypes[1], postParams, 0), getParameterOrDefault(parameterTypes[2], postParams, 1), getParameterOrDefault(parameterTypes[3], postParams, 2), getParameterOrDefault(parameterTypes[4], postParams, 3), getParameterOrDefault(parameterTypes[5], postParams, 4));

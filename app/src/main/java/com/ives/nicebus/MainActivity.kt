@@ -48,6 +48,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @NiceEvent(threadMode = ThreadMode.ASYNC, events = [EventConstant.EVENT_1])
+    fun test(age: Int?,age2: Int?,age3: Int?,age4: Int?,age5: Int?){
+
+    }
+
     @NiceEvent(threadMode = ThreadMode.ASYNC, events = [EventConstant.EVENT_1, EventConstant.EVENT_2])
     fun subscribeFunction2(event : String){
         Log.i(TAG, "subscribeFunction2 收到事件:$event")
