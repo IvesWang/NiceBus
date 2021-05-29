@@ -18,9 +18,10 @@ allprojects {
 添加以下依赖：
 ```
 dependencies {
-	implementation 'com.github.IvesWang:nicebus:0.9-alpha1'
+	implementation 'com.github.IvesWang:NiceBus:0.9-alpha1'
 }
 ```
+[![](https://jitpack.io/v/IvesWang/NiceBus.svg)](https://jitpack.io/#IvesWang/NiceBus)
 
 ###### 2. 注册监听类
 将你想要接收事件的类实例注册到NiceBus，一般在activity的onCreate或fragment的onViewCreated方法里添加：</br>
